@@ -1,0 +1,151 @@
+# Problem: Schmich Vexler Combustion Example 1 2008 
+# Overall space dimension:
+set dim = 2
+
+subsection Problem Specification
+    # Finite Elements in space-time
+    
+    # primal problem
+    set primal space type = cG
+    set primal p = 1
+    set primal space type support points = canonical
+    
+    set primal time type = dG
+    set primal r = 0
+    set primal time type support points = Gauss-Radau
+    
+    # dual problem
+    set dual space type = cG
+    set dual q = 2
+    set dual space type support points = canonical
+    
+    set dual time type = dG
+    set dual s = 0
+    set dual time type support points = Gauss-Lobatto
+    
+    # solution types
+    #set order approach = mixed order 
+    #set order approach = equal high order 
+    set order approach = equal low order 
+end
+
+subsection Mesh Specification
+    ############################################################################
+    # triangulation description
+    set TriaGenerator = SV_ParallelRods
+    # SV_ParallelRods: H L
+    set TriaGenerator Options = "16.0 60.0"
+    
+    # boundary description
+    set Grid Class = Grid_DWR_Dirichlet_Neumann_and_Robin
+    set Grid Class Options = "16.0 60.0"
+    
+    ############################################################################
+    # Global refinement of the initial mesh, S&V used 2
+    set global refinement = 2
+end
+
+subsection Time Integration
+    set initial time   = 0.0
+    set final time     = 60 
+    set time step size = 0.234375 #256 steps
+#    set time step size = 0.1171875 #512 steps 
+#    set time step size = 0.0146484375 #256*16 steps
+end
+
+subsection Newton
+    set max steps = 60
+    set lower bound = 1.0e-9
+    set rebuild parameter = 0.1
+    set line search steps = 10
+    set line search damping = 0.6
+end
+
+subsection DWR
+    set functional type = average
+    set functional = reaction rate 
+      
+    set loops = 4
+    
+    #reference values for SV (after 5 global refinements/6 loops)
+    set average reaction rate reference value = 3.70377685e-05 
+    set average rod species concentration reference value = 3.15768642e-01 
+    
+    set reaction rate calculation = true
+    set rod species concentration calculation = true
+    
+    # space strategy: global, fixed_fraction or Schwegler
+    set refine and coarsen space strategy = fixed_number
+    set refine and coarsen space top fraction1 =  0.3 
+    set refine and coarsen space top fraction2 =  0.3 
+    set refine and coarsen space bottom fraction = 0.0
+    set refine and coarsen space max growth factor n_active_cells = 8
+    
+    # time strategy: global, fixed_fraction
+	set refine and coarsen time strategy = fixed_number
+    set refine and coarsen time top fraction = 0.5 
+end
+
+subsection Parameter Specification
+    ############################################################################
+    # Lewis Number Le
+    set Lewis Number = 1.0
+    # Arrhenius law parameters
+    set Arrhenius alpha = 0.8
+    set Arrhenius beta = 10.0
+    
+    # initial flame front position
+    set x_tilde = 9.0
+    
+    ############################################################################
+    # Initial value function
+    set initial value u0 function = InitialValue_SchmichVexler
+    #                            tilde_x  Le   (Have to match above definition!)
+    set initial value u0 options  = "9.0  1.0"
+    
+    ############################################################################
+    # Dirichlet value functions
+    
+    set dirichlet boundary u_D function = ConstantFunction
+    #                                      theta  Y
+    set dirichlet boundary u_D options  = "1.0    0.0"
+    
+    
+    ############################################################################
+    # Boundary value function
+    set neumann boundary u_N function = ZeroFunction
+    
+    set neumann assembler quadrature auto mode = true
+    
+    ############################################################################
+    # Boundary value function
+    set robin boundary u_R function = ZeroFunction
+    
+    set robin assembler quadrature auto mode = true
+    
+    set robin boundary u_R factors  = "0.1 0"
+    
+end
+
+subsection Output Quantities
+    ############################################################################
+    # primal solution output control
+    set primal data output dwr loop = none     # use none, all, last or number
+    
+    set primal data output trigger type = I_n   # I_n mode: one output per I_n
+#    set primal data output trigger type = fixed # fixed mode: fixed output trigger time
+    set primal data output trigger time      = 0.005 # use fixed trigger value (fixed mode only)
+    
+    set primal data output patches auto mode = true # use < primal p > data output patches (auto mode)
+    set primal data output patches           = 1    # use this (no auto mode)
+    
+    ############################################################################
+    # dual solution output control
+    set dual data output dwr loop = none     # use none, all, last or number
+    set dual data output trigger type = I_n   # I_n mode: one output per I_n
+#    set dual data output trigger type = fixed # fixed mode: fixed output trigger time
+    set dual data output trigger time      = 0.005
+    
+    set dual data output patches auto mode = true # use < dual q > data output patches (auto mode)
+    set dual data output patches           = 1    # use this (no auto mode)
+end
