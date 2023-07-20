@@ -11,7 +11,7 @@
 /*  Copyright (C) 2012-2023 by Jan Philipp Thiele, Uwe Koecher                */
 /*                          and Marius Paul Bruchhaeuser                      */
 /*                                                                            */
-/*  This file is part of pu-dwr-diffusion                                     */
+/*  This file is part of pu-dwr-combustion                                    */
 /*                                                                            */
 /*  pu-dwr-combustion is free software: you can redistribute it and/or modify */
 /*  it under the terms of the GNU Lesser General Public License as            */
