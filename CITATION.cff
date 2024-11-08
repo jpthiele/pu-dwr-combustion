@@ -1,0 +1,20 @@
+title: pu-dwr-combustion
+authors:
+  - given-names: Jan
+    family-names: Thiele
+    affiliation: WIAS Berlin
+cff-version: 1.2.0
+message: If you use this software, please cite it using the metadata from this file.
+type: software
+doi: https://doi.org/10.5281/zenodo.10641103
+abstract: Space-time finite element solver to the low Mach number combustion
+  equations with goal oriented adaptive mesh refinement using the dual-weighted
+  residual method (DWR) with a partition-of-unity localization.
+keywords:
+  - dual-weighted residual
+  - partition-of-unity-localization
+  - space-time finite elements
+license: LGPL-3.0
+repository-code: https://github.com/jpthiele/pu-dwr-combustion
+date-released: 2024-02-09
+version: v1.0.0
