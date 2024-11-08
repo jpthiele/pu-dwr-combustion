@@ -16,12 +16,12 @@
   ],
   "codeRepository": "https://github.com/jpthiele/pu-dwr-combustion",
   "dateCreated": "2023-07-14",
-  "dateModified": "2024-02-09",
+  "dateModified": "2024-11-08",
   "datePublished": "2024-02-09",
   "description": "Space-time finite element solver to the low Mach number combustion equations with goal oriented adaptive mesh refinement using the dual-weighted residual method (DWR) with a partition-of-unity localization.",
   "developmentStatus": "inactive",
   "downloadUrl": "https://github.com/jpthiele/pu-dwr-combustion/releases/tag/v1.0.0",
-  "identifier": "https://doi.org/10.5281/zenodo.10641103",
+  "identifier": "10.5281/zenodo.14055421",
   "issueTracker": "https://github.com/jpthiele/pu-dwr-combustion/issues",
   "keywords": [
     "dual-weighted residual",
@@ -38,6 +38,6 @@
     "github.com/dealii/dealii",
     "github.com/Trilinos/Trilinos"
   ],
-  "version": "v1.0.0",
+  "version": "1.0.1",
   "type": "SoftwareSourceCode"
 }
