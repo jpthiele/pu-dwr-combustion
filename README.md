@@ -1,101 +1,68 @@
-# README #
+# PU-DWR Combustion
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10641103.svg)](https://doi.org/10.5281/zenodo.10641103)
 
-This README documents whatever steps are necessary to get the application
-  pu-dwr-combustion
-up and running.
+This software provides a space-time finite element solver to the low Mach number combustion equations
+with goal oriented adaptive mesh refinement.
 
-### What is this repository for? ###
+* Note: This software is a modification of [DTM++/dwr-diffusion](https://github.com/dtm-project/dwr-diffusion).
 
-* Goal-oriented adaptivity for the low Mach number combustion equations
+## Equations
+The combustion equations describe the reaction between a dimensionless temperature $\theta$ and a combustable species concentration $Y$:
+```math
+\displaylines{
+\partial_t\theta -\Delta\theta = \omega(\theta,Y)\quad\text{ in }\Omega\times(0,T),\\
+\partial_t Y -\frac{1}{Le}\Delta Y = -\omega(\theta,Y)\text{ in }\Omega\times(0,T).
+}
+```
+The reaction itself is described by Arrhenius law
+```math
+\omega(\theta,Y)\coloneqq\frac{\beta}{2Le}Y\exp(\frac{\beta(\theta-1)}{1+\alpha(\theta-1)}),
+```
+with parameters
+- Lewis Number $Le>0$
+- gas expansion rate $\alpha > 0$
+- dimensionless activation energy $\beta >0$
 
-* This software is a modification of DTM++/dwr-diffusion which can be found 
-  at https://github.com/dtm-project/dwr-diffusion
+## Adaptivity
+Goal oriented adaptivity is achieved by the dual-weighted residual method (DWR),
+with a space-time partition-of-unity as described in 
+[![](https://img.shields.io/badge/DOI-Springer-blue.svg)]( https://doi.org/10.1007/s10915-024-02485-6)
 
-### How do I get set up? ###
+Please cite this paper if you used the space-time PU-DWR method of this software.
+```
+@article{thiele2024numerical,
+  title={Numerical modeling and open-source implementation of variational partition-of-unity localizations 
+  of space-time dual-weighted residual estimators for parabolic problems},
+  author={Thiele, Jan Philipp and Wick, Thomas},
+  journal={Journal of Scientific Computing},
+  volume={99},
+  number={1},
+  pages={25},
+  year={2024},
+  publisher={Springer}
+}
+```
 
-* Dependencies
-deal.II v9.3.0 at least, linked to Trilinos, p4est and HDF5 
+## Setup
 
+### Dependencies
+This software has the following dependencies which can be installed together using [candi](https://github.com/dealii/candi):
+  * MUMPS
+  * Trilinos
+  * p4est
+  * HDF5  
+  * deal.II v9.3.0 at least, linked to the previous packages
 
-* Configuration
+### Configure and Build
+The software is configured and build using CMake by calling the following commands in the root folder of the repository.
 ```
    cmake -S. -Bbuild --DEAL_II_DIR=<path_to_your_deal_installation
-   cmake --build build``
+   cmake --build build
 ```
-* Run (single process)
+This sets up a `build` directory in which the executable will be located.
+It can be called as a single process or with MPI
 ```
-    ./build/pu-dwr-combustion input/default.prm
-```
-* Run (MPI parallel)
-```
-    mpirun -n <numprocs> build/pu-dwr-combustion input/default.prm
+    ./build/pu-dwr-combustion input/default.prm # single process
+    mpirun -n <numprocs> build/pu-dwr-combustion input/default.prm # MPI parallel
 ```
 
-### Who do I talk to? ###
-
-* Principial Author
-    * Jan Philipp Thiele, M.Sc. (thiele@ifam.uni-hannover.de)
-    
-* Contributors (original dwr-diffusion)
-    * Marius P. Bruchhaeuser (bruchhaeuser@hsu-hamburg.de)
-    * Dr.-Ing. Dipl.-Ing. Uwe Koecher (koecher@hsu-hamburg.de, dtmproject@uwe.koecher.cc)
-
-
-This software is adapted to the combustion equations and a partition-of-unity 
-localization approach for dual-weighted residuals.
-
-If you write scientific publication using results obtained by reusing parts
-of pu-dwr-combustion, especially by reusing the partition-of-unity for your applications
-please cite the following publication:
-
-- J. P. Thiele, T. Wick: "Numerical modeling and open-source implementation
-  of variational partition-of-unity localizations of space-time dual-weighted 
-  residual estimators for parabolic problems, in preparation
-
-Furthermore, if you reuse the
-datastructures, algorithms and/or supporting parameter/data input/output
-classes, please cite the following two publications:
-
-- U. Koecher, M.P. Bruchhaeuser, M. Bause: "Efficient and scalable
-  data structures and algorithms for goal-oriented adaptivity of space-time
-  FEM codes", Software X, Vol. 10, 2019
-  https://doi.org/10.1016/j.softx.2019.100239
-  
-
-- U. Koecher: "Variational space-time methods for the elastic wave equation
-  and the diffusion equation", Ph.D. thesis,
-  Department of Mechanical Engineering of the Helmut-Schmidt-University,
-  University of the German Federal Armed Forces Hamburg, Germany, p. 1-188,
-  urn:nbn:de:gbv:705-opus-31129, 2015. Open access via:
-  http://edoc.sub.uni-hamburg.de/hsu/volltexte/2015/3112/
-
-### Further references ###
- A description of the combustion equations as well as the test cases solved
- by the provided input files (default.prm and rod.prm) can be found in the
- following publication  
-    
- - M. Schmich and B. Vexler. Adaptivity with Dynamic Meshes for Space-Time 
-   Finite Element Discretizations of Parabolic Equations. 
-   SIAM Journal on Scientific Compution, 30(1):369-393, Jan. 2008
-   https://doi.org/10.1137/060670468
-   
-
-### License ###
-Copyright (C) 2012-2023 by Jan Philipp Thiele and contributors
-
-
-pu-dwr-combustion is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as
-published by the Free Software Foundation, either
-version 3 of the License, or (at your option) any later version.
-
-pu-dwr-combustion is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU Lesser General Public License for more details.
- 
-You should have received a copy of the GNU Lesser General Public License
-along with pu-dwr-combustion. If not, see <http://www.gnu.org/licenses/>.
-Please see the file
-        ./LICENSE
-for details.
